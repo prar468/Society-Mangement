@@ -15,6 +15,7 @@ export default function Register() {
     gender:"",
   })
 
+
   function submit(e){
     e.preventDefault();
     axios.post(url,{
@@ -28,7 +29,7 @@ export default function Register() {
     })
     .then(res=>{
       console.log(res.data)
-    })
+    }) 
   }
 
   function handle(e){
@@ -37,6 +38,8 @@ export default function Register() {
     setUser(newData)
     console.log(newData)
   }
+
+  
 
 
   return (
@@ -161,6 +164,12 @@ export default function Register() {
                     >
                       Gender
                     </label>
+                    <select onChange={(e)=>handle(e)} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-75 ease-linear transition-all duration-150"
+                      placeholder="Gender">
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                    </select>
                     {/* <select 
                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     name="gender"
@@ -170,14 +179,14 @@ export default function Register() {
                       <option >Male</option>
                       <option >Other</option>
                     </select> */}
-                    <input
+                    {/* <input
                       type="text"
                       name="gender"
                       value={user.gender}
                       onChange={(e)=>handle(e)}
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Gender"
-                    />
+                    /> */}
                   </div>
 
 
