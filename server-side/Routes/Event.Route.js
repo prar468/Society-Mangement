@@ -3,7 +3,7 @@ const router = express.Router()
 const Controller = require('../Controller/Event.Controller')
 const { verifyAccessToken } = require('../helpers/jwt_helpers')
 
-router.post('/', Controller.create)
+router.post('/', verifyAccessToken, Controller.create)
 router.get('/:id', verifyAccessToken, Controller.get)
 router.get('/', Controller.list)
 router.put('/:id', verifyAccessToken, Controller.update)

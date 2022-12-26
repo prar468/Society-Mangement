@@ -63,7 +63,7 @@ module.exports = {
             const refreshToken = await signRefreshToken(user.id)
             const userDataSend = {
                 id: user._id,
-                name:user.name,
+                name:user.firstName,
                 email: user.email,
             }            
             console.log(userDataSend);

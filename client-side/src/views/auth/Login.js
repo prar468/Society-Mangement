@@ -15,7 +15,11 @@ export default function Login() {
       password:user.password
     })
     .then(res=>{
-      console.log(res.data)
+      const resData = res.data
+      const accessToken = resData.accessToken;
+      const userName = resData.user.name;
+      localStorage.setItem('Name', userName);
+      localStorage.setItem('AccessToken', accessToken);
       history.push('/auth/selectSociety')
     })
   }

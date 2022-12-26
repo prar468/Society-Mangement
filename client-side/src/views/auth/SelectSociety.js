@@ -4,15 +4,6 @@ import React, { useEffect, useState} from "react";
 import axios from "axios";
 import { useHistory } from "react-router";
 
-// const societyList = [
-//     { label: "Ashoka Enclave", value: 1 },
-//     { label: "Shalimar", value: 2 },
-//     { label: "Eden Garden", value: 3 },
-//     { label: "Surbhi Vihar", value: 4 },
-// ];
-
-
-
 export default function SelectSociety() {
 
     const [society, getSocieties] = useState('');
@@ -39,6 +30,8 @@ export default function SelectSociety() {
             history.push('/user/dashboard')
     }
 
+    const userName = localStorage.getItem('Name')
+
 return (
     <>
     <div className="container mx-auto px-4 h-full">
@@ -47,7 +40,7 @@ return (
                 <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
                 <div className="rounded-t mb-0 px-6 py-6">
                     <div className="btn-wrapper text-center text-black">
-                        <h3 className="p-4">hello (user name)</h3>
+                        <h3 className="p-4">hello {userName}, select your society</h3>
                         <select>
                             {societylist.map( (soc,index)=>
                             (
