@@ -1,37 +1,68 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function Login() {
   const url = "http://localhost:8000/auth/login";
+
   const [user ,setUser] = useState({ email:"" , password:""})
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
+
   const history = useHistory();
   function submit(e){
     e.preventDefault();
-    console.log(e)
-    axios.post(url,{
-      email:user.email,
-      password:user.password
-    })
-    .then(res=>{
-      const resData = res.data
-      const accessToken = resData.accessToken;
-      const userName = resData.user.name;
-      localStorage.setItem('Name', userName);
-      localStorage.setItem('AccessToken', accessToken);
-      history.push('/auth/selectSociety')
-    })
+    setFormErrors(validate(user));
+    setIsSubmit(true);
+    // console.log(e)
+    if(isSubmit){
+      axios.post(url,{
+        email:user.email,
+        password:user.password
+      })
+      .then(res=>{
+        const resData = res.data
+        const accessToken = resData.accessToken;
+        const userName = resData.user.name;
+        localStorage.setItem('Name', userName);
+        localStorage.setItem('AccessToken', accessToken);
+        history.push('/auth/selectSociety')
+      })
+    }
   }
-
 
   function handle(e){
     const newData = {...user}
     newData[e.target.name]=e.target.value
+    
     setUser(newData)
-    console.log(newData)
+    // console.log(newData)
   }
 
+  useEffect(()=>{
+    console.log("hello")
+    console.log(formErrors)
+    if(Object.keys(formErrors).length===0 && isSubmit){
+      console.log(user)
+    }
+  },[formErrors]);
+
+  const validate = (values) =>{
+    const errors = {};
+    const regex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if(!values.email){
+      errors.email = "Email is required"
+    } else if(!regex.test(values.email)){
+      errors.email = "Invalid email format"
+    }
+    if(!values.password){
+      errors.password = "Password is required"
+    } else if (values.password.length <4){
+      errors.password = "Password must be more than 4 characters"
+    }
+    return errors;
+  }
 
   return (
     <>
@@ -60,6 +91,7 @@ export default function Login() {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Email"
                     />
+                    <p className="text-red-500">{formErrors.email}</p>
                   </div>
 
                   <div className="relative w-full mb-3">
@@ -77,6 +109,7 @@ export default function Login() {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Password"
                     />
+                    <p className="text-red-500">{formErrors.password}</p>
                   </div>
                   <div>
                     <label className="inline-flex items-center cursor-pointer">

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import axios from "axios";
 
 export default function Register() {
@@ -14,22 +14,28 @@ export default function Register() {
     contact:"",
     gender:"",
   })
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
 
 
   function submit(e){
     e.preventDefault();
-    axios.post(url,{
-      firstName:user.firstName,
-      lastName:user.lastName,
-      email:user.email,
-      password:user.password,
-      address:user.address,
-      contact:user.contact,
-      gender:user.gender
-    })
-    .then(res=>{
-      console.log(res.data)
-    }) 
+    setFormErrors(validate(user));
+    setIsSubmit(true);
+    if(isSubmit){
+      axios.post(url,{
+        firstName:user.firstName,
+        lastName:user.lastName,
+        email:user.email,
+        password:user.password,
+        address:user.address,
+        contact:user.contact,
+        gender:user.gender
+      })
+      .then(res=>{
+        console.log(res.data)
+      }) 
+    }
   }
 
   function handle(e){
@@ -39,7 +45,53 @@ export default function Register() {
     console.log(newData)
   }
 
+  useEffect(()=>{
+    console.log("hello")
+    console.log(formErrors)
+    if(Object.keys(formErrors).length===0 && isSubmit){
+      console.log(user)
+    }
+  },[formErrors]);
   
+  const validate = (values) =>{
+    const errors = {};
+    const regex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+    if(!values.firstName){
+      errors.firstName = "First name is required"
+    } else if (values.firstName.length <3){
+      errors.firstName = "First name must be more than 3 characters"
+    }
+
+    if (values.lastName.length <3){
+      errors.lastName = "Last name must be more than 3 characters"
+    }
+
+    if(!values.email){
+      errors.email = "Email is required"
+    } else if(!regex.test(values.email)){
+      errors.email = "Invalid email format"
+    }
+
+    if(!values.password){
+      errors.password = "Password is required"
+    } else if (values.password.length <4){
+      errors.password = "Password must be more than 4 characters"
+    }
+
+    if(!values.contact){
+      errors.contact = "Phone number is required"
+    } else if (!(values.contact.length ==10)){
+      errors.contact = "Invalid contact number"
+    }
+
+    if(!values.address){
+      errors.address = "Address is required"
+    } else if (values.address.length <11){
+      errors.address = "Address must be more than 10 characters"
+    }
+    return errors;
+  }
 
 
   return (
@@ -69,6 +121,7 @@ export default function Register() {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="First name"
                     />
+                    <p className="text-red-500">{formErrors.firstName}</p>
                   </div>
 
 
@@ -87,6 +140,7 @@ export default function Register() {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Last name"
                     />
+                    <p className="text-red-500">{formErrors.lastName}</p>
                   </div>
 
                   <div className="relative w-full mb-3">
@@ -104,6 +158,7 @@ export default function Register() {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Email"
                     />
+                    <p className="text-red-500">{formErrors.email}</p>
                   </div>
 
                   <div className="relative w-full mb-3">
@@ -121,6 +176,7 @@ export default function Register() {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Password" 
                     />
+                    <p className="text-red-500">{formErrors.password}</p>
                   </div>
 
                   <div className="relative w-full mb-3">
@@ -138,6 +194,7 @@ export default function Register() {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Phone Number"
                     />
+                    <p className="text-red-500">{formErrors.contact}</p>
                   </div>
 
                   <div className="relative w-full mb-3">
@@ -155,6 +212,7 @@ export default function Register() {
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Address"
                     />
+                    <p className="text-red-500">{formErrors.address}</p>
                   </div>
 
                   <div className="relative w-full mb-3">
@@ -170,23 +228,6 @@ export default function Register() {
                       <option value="female">Female</option>
                       <option value="other">Other</option>
                     </select>
-                    {/* <select 
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    name="gender"
-                    value={user.gender}
-                    onChange={(e)=>handle(e)}>
-                      <option >Female</option>
-                      <option >Male</option>
-                      <option >Other</option>
-                    </select> */}
-                    {/* <input
-                      type="text"
-                      name="gender"
-                      value={user.gender}
-                      onChange={(e)=>handle(e)}
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Gender"
-                    /> */}
                   </div>
 
 
