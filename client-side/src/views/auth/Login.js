@@ -15,7 +15,6 @@ export default function Login() {
     e.preventDefault();
     setFormErrors(validate(user));
     setIsSubmit(true);
-    // console.log(e)
     if(isSubmit){
       axios.post(url,{
         email:user.email,
